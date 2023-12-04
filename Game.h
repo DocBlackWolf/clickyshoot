@@ -13,16 +13,30 @@ private:
 
 public:
 
+	Juego() {
+		_wnd = new sf::RenderWindow(sf::VideoMode(1920, 1080), "clicker shooter");
+
+	}
 
 
+	void Loop() {
+		while (_wnd->isOpen())
+		{
 
+		}
+	}
+
+	void ProcessEvents() {
+
+	}
+
+	void Update(){
+		
+
+	}
+
+	void Draw() {
+
+	}
 
 };
-
-Juego::Juego()
-{
-}
-
-Juego::~Juego()
-{
-}
