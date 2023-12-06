@@ -2,14 +2,17 @@
 
 #include "libs.h"
 #include "crosshair.h"
+#include "Enemy.h"
 
 class Juego
 {
 private:
 
+	sf::Texture House;
+	sf::Sprite Hspr;
 	sf::RenderWindow* _wnd;
 	PlayerCrossHair* _player;
-
+	Enemy* _enemy;
 
 
 public:
@@ -18,6 +21,7 @@ public:
 	Juego() {
 		_wnd = new sf::RenderWindow(sf::VideoMode(1920, 1080), "clicker shooter");
 		_player = new PlayerCrossHair();
+		_enemy = new Enemy();
 
 	}
 
@@ -27,7 +31,7 @@ public:
 		{
 			ProcessEvents();
 			Update();
-			Draw();
+			draw();
 
 		}
 	}
@@ -53,9 +57,10 @@ public:
 
 	}
 
-	void Draw() {
+	void draw() {
 		_wnd->clear(sf::Color::Cyan);
 		_player->Render(_wnd);
+		_enemy->Render(_wnd);
 		_wnd->display();
 	}
 
