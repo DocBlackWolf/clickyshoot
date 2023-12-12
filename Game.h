@@ -8,20 +8,18 @@ class Juego
 {
 private:
 
-	sf::Texture House;
-	sf::Sprite Hspr;
 	sf::RenderWindow* _wnd;
 	PlayerCrossHair* _player;
-	Enemy* _enemy;
+	Enemy *_enemies;
 
 
 public:
 
-	
+
 	Juego() {
 		_wnd = new sf::RenderWindow(sf::VideoMode(1920, 1080), "clicker shooter");
 		_player = new PlayerCrossHair();
-		_enemy = new Enemy();
+		_enemies = new Enemy[10];
 
 	}
 
@@ -44,24 +42,33 @@ public:
 			{
 			case sf::Event::Closed:_wnd->close();
 				break;
-			}
 
+			case sf::Event::MouseButtonPressed:
+				if (evt.mouseButton.button == sf::Mouse::Button::Left)
+					Shoot();
+				break;
+			}
 		}
 
 	}
 
-	void Update(){
-		sf::Vector2i mousePos = sf::Mouse::getPosition(*_wnd);
+	void Update() {
+		sf::Vector2i  mousePos = sf::Mouse::getPosition(*_wnd);
 		_player->GivePos(mousePos.x, mousePos.y);
-		
+
+
+	}
+
+	void Shoot() {
+		//check colitions (taken from the twich video)
 
 	}
 
 	void draw() {
 		_wnd->clear(sf::Color::Cyan);
 		_player->Render(_wnd);
-		_enemy->Render(_wnd);
 		_wnd->display();
 	}
+
 
 };

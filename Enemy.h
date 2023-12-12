@@ -8,39 +8,27 @@ class Enemy
 private:
 	sf::Texture _EnemTex;
 	sf::Sprite _EnemSpr;
-	sf::Clock clock;
+	sf::Clock _clock;
 	bool _Alive;
-	bool _Looking;
-	float _timeLooking;
-	float _timeDead;
+
+	
 
 
 public:
 	Enemy() {
-		_EnemTex.loadFromFile("assets/gunman.png");
+		_EnemTex.loadFromFile("assets/chemmalo.png");
 		_EnemSpr.setTexture(_EnemTex);
-		_EnemSpr.setScale(1.0f, 1.0f);
+		_EnemSpr.setScale(0.10f, 0.10f);
 		_Alive = true;
-		_Looking = true;
-		_timeLooking = 0;
-		_timeDead = 0;
-
-
-
 	}
 
-
-	bool Living() {
+	bool IsAlive() {
 		return _Alive;
 	}
 
-	bool Looking() {
-		return _Looking;
-
-	}
-
-	void Render(sf::RenderWindow *wnd) {
-		wnd->draw(_EnemSpr);
+	bool OnTop(float x, float y) {
+		sf::FloatRect bounds = _EnemSpr.getGlobalBounds();
+		return bounds.contains(x, y);
 	}
 
 };
