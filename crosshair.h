@@ -17,7 +17,7 @@ public:
 		_crossSprite.setTexture(_crossTex);
 		sf::Vector2u size = _crossTex.getSize();
 		_crossSprite.setOrigin(size.x / 2.0f, size.y / 2.0f);
-		_crossSprite.setScale(0.3f, 0.3f);
+		_crossSprite.setScale(0.1f, 0.1f);
 	}
 
 	void Render(sf::RenderWindow *wnd) {

@@ -19,7 +19,14 @@ public:
 	Juego() {
 		_wnd = new sf::RenderWindow(sf::VideoMode(1920, 1080), "clicker shooter");
 		_player = new PlayerCrossHair();
-		_enemies = new Enemy[10];
+		_enemies = new Enemy[5];
+
+
+
+		_enemies[1].SetOrigin(100, 100);
+		_enemies[2].SetOrigin(-6000, -6000);
+		_enemies[3].SetOrigin(-4000, -4000);
+
 
 	}
 
@@ -60,14 +67,29 @@ public:
 	}
 
 	void Shoot() {
-		//check colitions (taken from the twich video)
+		//check colitions and logic (tomado del vid de twich)
+		sf::Vector2f playerPos = _player->GetPos();
+		for (int i = 0; i < 5; i++) {
+			if (_enemies[i].IsAlive()) {
+				if (_enemies[i].OnTop(playerPos.x, playerPos.y))
+					_enemies[i].Kill();
+			}
+		}
 
 	}
 
+
+
 	void draw() {
 		_wnd->clear(sf::Color::Cyan);
+		for (int i = 0; i < 5; i++) {
+			if(_enemies[i].IsAlive())
+			_enemies[i].Render(_wnd);
+		}
 		_player->Render(_wnd);
 		_wnd->display();
+
+		
 	}
 
 
