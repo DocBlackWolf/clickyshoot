@@ -1,5 +1,6 @@
 #pragma once
 #include "libs.h"
+#include <iostream>
 
 class PlayerCrossHair
 {
@@ -31,6 +32,7 @@ public:
 
 	sf::Vector2f GetPos() {
 		return _crossSprite.getPosition();
+		
 	}
 
 };
