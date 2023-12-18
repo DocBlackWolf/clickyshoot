@@ -15,6 +15,7 @@ private:
 	Enemy *_enemies;
 	Scenario* _scene;
 	int EnemySize;
+	sf::Clock respawnT;
 	
 
 
@@ -26,17 +27,17 @@ public:
 		_wnd = new sf::RenderWindow(sf::VideoMode(800,600), "clicker shooter", sf::Style::Titlebar | sf::Style::Close);
 		_scene = new Scenario();
 		_player = new PlayerCrossHair();
-		EnemySize = 5; //aqui determinas el monto de enemigos (tiene otros usos aparte del monto de inicializacion como el index de respawn)
+		EnemySize = 5; //aqui determinas el monto de enemigos (tiene otros usos aparte del monto de inicializacion como el index de respawn aunque el pocicionamiento es manual)
 		_enemies = new Enemy[EnemySize];
 		std::srand(static_cast<unsigned>(std::time(nullptr))); //esto lo consegui con IA
 
 
 
 		_enemies[0].SetOrigin(-1000, -1500);
-		_enemies[1].SetOrigin(-2000, -2500);
-		_enemies[2].SetOrigin(-3000, -4500);
-		_enemies[3].SetOrigin(-5000, -5500);
-		_enemies[4].SetOrigin(-6000, -6500);
+		_enemies[1].SetOrigin(-800, -3500);
+		_enemies[2].SetOrigin(-5000, -1500);
+		_enemies[3].SetOrigin(-3000, -3500);
+		_enemies[4].SetOrigin(-5500, -3500);
 
 
 
@@ -84,8 +85,6 @@ public:
 
 	void Respawns() {
 
-		//Si, ya se que esta todo en ingles pero me confundo menos si escribo todo en un solo idioma
-
 		// Genera un indice random, eso es para elegir el enemigo
 		
 		int randomIndex = std::rand() % EnemySize;
@@ -95,16 +94,14 @@ public:
 			return; // If alive, ignore
 		}
 		
-		sf::Clock respawnT;
-		std::random_device rd;
-		std::mt19937 gen(rd());
 
-		sf::Time respawnDelay = sf::seconds(std::uniform_real_distribution<>(1.0, 5.0)(gen));
+		sf::Time respawnDelay = sf::seconds(std::rand() % 5 + 2);
 		
 		
 		if (respawnT.getElapsedTime().asSeconds() >= respawnDelay.asSeconds()) {
 
 			respawnT.restart();
+			std::srand(static_cast<unsigned>(std::time(nullptr)));
 
 				// imprime info de respawn, es puramente para testeo
 				std::cout << "Respawning enemy at index " << randomIndex << " in " << respawnDelay.asSeconds() << " seconds." << std::endl;
@@ -112,6 +109,8 @@ public:
 				// Revive al enemigo con el indice correspondiente
 				_enemies[randomIndex].Revive();
 
+
+				//informa si se sobrepasa, es puramente para testeo pero raramente hubo casos que paso
 				if (randomIndex > 5) {
 					std::cout << "Error: Invalid random index generated, RUN BRO" << std::endl;
 				}
@@ -134,6 +133,7 @@ public:
 
 	void draw() {
 		_wnd->clear(sf::Color::Cyan);
+		_scene->BuildBa(_wnd);
 		for (int i = 0; i < 5; i++) {
 			if(_enemies[i].IsAlive())
 			_enemies[i].Render(_wnd);

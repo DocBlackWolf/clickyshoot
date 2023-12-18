@@ -22,7 +22,7 @@ public:
 		_EnemTex.loadFromFile("assets/gunman.png");
 		_EnemSpr.setTexture(_EnemTex);
 		_EnemSpr.setScale(0.10f, 0.10f);
-		_Alive = true;
+		_Alive = false;
 	}
 
 	void SetOrigin(float x, float y) {
@@ -65,14 +65,20 @@ public:
 class Inocent : public Enemy
 {
 private:
-
 	sf::Texture _InocentTex;
+	sf::Sprite _InocenteSpr;
 
 public:
-	
-	Inocent() : Enemy()
-	{
-		
+
+	Inocent() {
+
+		if (_InocentTex.loadFromFile("filename.png")) {
+			// Set the texture to the sprite
+			_InocenteSpr.setTexture(_InocentTex);
+		}
+		else {
+
+		}
 	}
 
 
