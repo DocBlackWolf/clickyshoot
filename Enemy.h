@@ -30,6 +30,10 @@ public:
 		_EnemSpr.setOrigin(x, y);
 	}
 
+	float TimeAlive() {
+		return _clock.getElapsedTime().asSeconds();
+	}
+
 	bool IsAlive() {
 		return _Alive;
 	}
@@ -45,6 +49,7 @@ public:
 
 	void Revive() {
 		_Alive = true;
+		_clock.restart();
 	}
 
 
@@ -66,20 +71,33 @@ class Inocent : public Enemy
 {
 private:
 	sf::Texture _InocentTex;
-	sf::Sprite _InocenteSpr;
+	sf::Sprite _InocentSpr;
+	sf::Clock _clock;
+	bool _Alive;
 
 public:
 
 	Inocent() {
 
-		if (_InocentTex.loadFromFile("filename.png")) {
-			// Set the texture to the sprite
-			_InocenteSpr.setTexture(_InocentTex);
-		}
-		else {
+		_InocentTex.loadFromFile("assets/innocent.png");
+		_InocentSpr.setTexture(_InocentTex);
+		_InocentSpr.setScale(0.10f, 0.10f);
+		_Alive = false;
 
-		}
 	}
 
+	void SetOrigin(float x, float y) {
+
+		_InocentSpr.setOrigin(x, y);
+	}
+
+	void Render(sf::RenderWindow* wnd) {
+		wnd->draw(_InocentSpr);
+	}
+
+	bool OnTop(float x, float y) {
+		sf::FloatRect bounds = _InocentSpr.getGlobalBounds();
+		return bounds.contains(x, y);
+	}
 
 };
