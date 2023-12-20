@@ -21,7 +21,7 @@ private:
 	int _points;
 	sf::Font _font;
 	
-	void _actualizarPuntaje() {
+	void _UpdateScore() {
 		char pts[100];
 		_itoa_s(_points, pts, 10);
 		_puntaje.setString(pts);
@@ -33,6 +33,7 @@ public:
 
 	Juego() {
 		_wnd = new sf::RenderWindow(sf::VideoMode(800,800), "clicker shooter", sf::Style::Titlebar | sf::Style::Close);
+		_wnd->setMouseCursorVisible(false);
 		_scene = new Scenario();
 		_player = new PlayerCrossHair();
 		EnemySize = 5; //aqui determinas el monto de enemigos (tiene otros usos aparte del monto de inicializacion como el index de respawn aunque el pocicionamiento es manual)
@@ -41,7 +42,7 @@ public:
 		std::srand(static_cast<unsigned>(std::time(nullptr))); //esto es para el RAND , de IA
 		_font.loadFromFile("assets/arial.ttf");
 		_points = 0;
-		_puntaje.setPosition(0.0f,0.0f);
+		_puntaje.setPosition(60.0f,700.0f);
 		_puntaje.setCharacterSize(50.f);
 		_puntaje.setFillColor(sf::Color::White);
 		_puntaje.setFont(_font);
@@ -88,6 +89,8 @@ public:
 			case sf::Event::MouseButtonPressed:
 				if (evt.mouseButton.button == sf::Mouse::Button::Left)
 					Shoot();
+				_UpdateScore();
+					
 				break;
 			}
 		}
@@ -108,9 +111,9 @@ public:
 
 	void Respawns() {
 
-		// Genera un indice random, eso es para elegir el enemigo
 		
-		int randomIndex = std::rand() % EnemySize;
+		
+		int randomIndex = std::rand() % EnemySize; // Genera y sostiene un indice random, eso es para elegir el enemigo
 
 		// revisar si esta vivo o no
 		if (_enemies[randomIndex].IsAlive()) {
@@ -127,11 +130,11 @@ public:
 
 
 				// imprime info de respawn, debug tool
-				std::cout << "Respawning enemy at index " << randomIndex << " in " << respawnDelay.asSeconds() << " seconds." << std::endl;
+				/*std::cout << "Respawning enemy at index " << randomIndex << " in " << respawnDelay.asSeconds() << " seconds." << std::endl;*/
 
 				// Revive al enemigo con el indice correspondiente
 		
-				std::random_device rd; //seed gen, IA
+				std::random_device rd; //class gen, IA
 				std::mt19937 gen(rd()); //Gen, IA
 				std::uniform_real_distribution<double> dis(0.0, 1.0); //float entre 0 y 100(1)
 				double randomNumber = dis(gen); //double para estimar un % de cual aparece hostil o enemigo
@@ -148,10 +151,6 @@ public:
 					}
 				}
 
-				//informa si se sobrepasa, es puramente para testeo pero raramente hubo casos que paso
-				if (randomIndex > 5) {
-					std::cout << "Error: Invalid random index generated, RUN BRO" << std::endl;
-				}
 		}
 	}
 
@@ -171,16 +170,18 @@ public:
 
 
 	void Shoot() {
-		//check colitions and logic (tomado del vid de twich)
+		//check colitions and logic, para ambos
 		sf::Vector2f playerPos = _player->GetPos();
 		for (int i = 0; i < 5; i++) {
 			if (_enemies[i].IsAlive()) {
 				if (_enemies[i].OnTop(playerPos.x, playerPos.y))
 					_enemies[i].Kill();
+				_points++;
 			}
 			if (_inocents[i].IsAlive()) {
 				if (_inocents[i].OnTop(playerPos.x, playerPos.y))
 					_inocents[i].Kill();
+				_points--;
 			}
 		}
 	}
@@ -201,7 +202,11 @@ public:
 			if (_inocents[i].IsAlive()) 
 				_inocents[i].Render(_wnd);
 		}
+
+
+		
 		_player->Render(_wnd);
+		_wnd->draw(_puntaje);
 		_wnd->display();
 
 		

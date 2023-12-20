@@ -79,7 +79,7 @@ public:
 
 	Inocent() {
 
-		_InocentTex.loadFromFile("assets/chembueno.png");
+		_InocentTex.loadFromFile("assets/chembueno.jpg");
 		_InocentSpr.setTexture(_InocentTex);
 		_InocentSpr.setScale(0.8f, 0.8f);
 		_Alive = false;
