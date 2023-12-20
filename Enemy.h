@@ -19,7 +19,7 @@ private:
 public:
 	Enemy() {
 		
-		_EnemTex.loadFromFile("assets/gunman.png");
+		_EnemTex.loadFromFile("assets/chemmalo.png");
 		_EnemSpr.setTexture(_EnemTex);
 		_EnemSpr.setScale(0.10f, 0.10f);
 		_Alive = false;
@@ -79,9 +79,9 @@ public:
 
 	Inocent() {
 
-		_InocentTex.loadFromFile("assets/innocent.png");
+		_InocentTex.loadFromFile("assets/chembueno.png");
 		_InocentSpr.setTexture(_InocentTex);
-		_InocentSpr.setScale(0.10f, 0.10f);
+		_InocentSpr.setScale(0.8f, 0.8f);
 		_Alive = false;
 
 	}
@@ -98,6 +98,11 @@ public:
 	bool OnTop(float x, float y) {
 		sf::FloatRect bounds = _InocentSpr.getGlobalBounds();
 		return bounds.contains(x, y);
+	}
+
+	sf::Vector2f GetPos() {
+		return _InocentSpr.getPosition();
+
 	}
 
 };

@@ -17,22 +17,36 @@ private:
 	Scenario* _scene;
 	int EnemySize;
 	sf::Clock respawnT;
-	sf::Clock AliveT;
+	sf::Text _puntaje;
+	int _points;
+	sf::Font _font;
 	
+	void _actualizarPuntaje() {
+		char pts[100];
+		_itoa_s(_points, pts, 10);
+		_puntaje.setString(pts);
+	}
 
 
 public:
 
 
 	Juego() {
-		//sf::VideoMode desktopmode = sf::VideoMode::getDesktopMode(); ventanas ajustables no se manejan muy bien
 		_wnd = new sf::RenderWindow(sf::VideoMode(800,800), "clicker shooter", sf::Style::Titlebar | sf::Style::Close);
 		_scene = new Scenario();
 		_player = new PlayerCrossHair();
 		EnemySize = 5; //aqui determinas el monto de enemigos (tiene otros usos aparte del monto de inicializacion como el index de respawn aunque el pocicionamiento es manual)
 		_enemies = new Enemy[EnemySize];
 		_inocents = new Inocent[EnemySize];
-		std::srand(static_cast<unsigned>(std::time(nullptr))); //esto lo consegui con IA
+		std::srand(static_cast<unsigned>(std::time(nullptr))); //esto es para el RAND , de IA
+		_font.loadFromFile("assets/arial.ttf");
+		_points = 0;
+		_puntaje.setPosition(0.0f,0.0f);
+		_puntaje.setCharacterSize(50.f);
+		_puntaje.setFillColor(sf::Color::White);
+		_puntaje.setFont(_font);
+
+
 
 
 
@@ -41,7 +55,11 @@ public:
 		_enemies[2].SetOrigin(-5000, -1500);
 		_enemies[3].SetOrigin(-3000, -3500);
 		_enemies[4].SetOrigin(-5500, -3500);
-		_inocents[0].SetOrigin(-5500, -3500);
+		_inocents[0].SetOrigin(-1000, -1500);
+		_inocents[1].SetOrigin(-800, -3500);
+		_inocents[2].SetOrigin(-5000, -1500);
+		_inocents[3].SetOrigin(-3000, -3500);
+		_inocents[4].SetOrigin(-5500, -3500);
 
 
 
@@ -100,22 +118,35 @@ public:
 		}
 		
 
-		sf::Time respawnDelay = sf::seconds(std::rand() % 5 + 2);
+		sf::Time respawnDelay = sf::seconds(std::rand() % 5 + 1); //genera un numero entre 1 y 5 para el delay de respawn
 		
 		
-		if (respawnT.getElapsedTime().asSeconds() >= respawnDelay.asSeconds()) {
+		if (respawnT.getElapsedTime().asSeconds() >= respawnDelay.asSeconds()) { //paso el tiempo necesario ejecutar 
 
 			respawnT.restart();
 
 
-				// imprime info de respawn, es puramente para testeo
+				// imprime info de respawn, debug tool
 				std::cout << "Respawning enemy at index " << randomIndex << " in " << respawnDelay.asSeconds() << " seconds." << std::endl;
 
 				// Revive al enemigo con el indice correspondiente
+		
+				std::random_device rd; //seed gen, IA
+				std::mt19937 gen(rd()); //Gen, IA
+				std::uniform_real_distribution<double> dis(0.0, 1.0); //float entre 0 y 100(1)
+				double randomNumber = dis(gen); //double para estimar un % de cual aparece hostil o enemigo
 
-				_enemies[randomIndex].Revive();
-				_inocents[randomIndex].Revive();
 
+				if (randomNumber < 0.8) {
+					if (_inocents[randomIndex].IsAlive() == false) {
+						_enemies[randomIndex].Revive();
+					}
+				}
+				else {
+					if (_enemies[randomIndex].IsAlive() == false) {
+						_inocents[randomIndex].Revive();
+					}
+				}
 
 				//informa si se sobrepasa, es puramente para testeo pero raramente hubo casos que paso
 				if (randomIndex > 5) {
@@ -131,7 +162,9 @@ public:
 
 			if (_enemies[i].TimeAlive() > 5) {
 				_enemies[i].Kill();
-				AliveT.restart();
+			}
+			if (_inocents[i].TimeAlive() > 3) {
+				_inocents[i].Kill();
 			}
 		}
 	}
@@ -144,6 +177,8 @@ public:
 			if (_enemies[i].IsAlive()) {
 				if (_enemies[i].OnTop(playerPos.x, playerPos.y))
 					_enemies[i].Kill();
+			}
+			if (_inocents[i].IsAlive()) {
 				if (_inocents[i].OnTop(playerPos.x, playerPos.y))
 					_inocents[i].Kill();
 			}
@@ -153,7 +188,7 @@ public:
 
 
 	void draw() {
-		_wnd->clear(sf::Color::Cyan);
+		_wnd->clear(sf::Color::Black);
 		_scene->BuildBa(_wnd);
 		
 		for (size_t i = 0; i < EnemySize; i++) {
