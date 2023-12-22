@@ -174,14 +174,18 @@ public:
 		sf::Vector2f playerPos = _player->GetPos();
 		for (int i = 0; i < 5; i++) {
 			if (_enemies[i].IsAlive()) {
-				if (_enemies[i].OnTop(playerPos.x, playerPos.y))
+				if (_enemies[i].OnTop(playerPos.x, playerPos.y)) {
 					_enemies[i].Kill();
-				_points++;
+					_points++;
+				}
 			}
 			if (_inocents[i].IsAlive()) {
-				if (_inocents[i].OnTop(playerPos.x, playerPos.y))
+				if (_inocents[i].OnTop(playerPos.x, pblayerPos.y)) {
+
+
 					_inocents[i].Kill();
-				_points--;
+					_points--;
+				}
 			}
 		}
 	}
