@@ -180,11 +180,11 @@ public:
 				}
 			}
 			if (_inocents[i].IsAlive()) {
-				if (_inocents[i].OnTop(playerPos.x, pblayerPos.y)) {
+				if (_inocents[i].OnTop(playerPos.x, playerPos.y)) {
 
-
+			
 					_inocents[i].Kill();
-					_points--;
+				_points--;
 				}
 			}
 		}
